@@ -502,41 +502,33 @@
     });
   }
 
-  function filterTools(){
-    const search = clean($('toolSearch').value).toLowerCase();
-    const category = clean($('categoryFilter').value);
+function normalizeSearch(v){
+  return clean(v).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
 
-    filteredTools = tools.filter(t => {
-      const text = [
-        skuOf(t),
-        nameOf(t),
-        clean(t.Category),
-        clean(t.SubCategory || t.SubCateg),
-        clean(t.Tags)
-      ].join(' ').toLowerCase();
+function filterTools(){
+  const searchRaw = clean($('toolSearch').value).toLowerCase();
+  const searchTight = normalizeSearch($('toolSearch').value);
+  const category = clean($('categoryFilter').value);
 
-      const matchesSearch = !search || text.includes(search);
-      const matchesCategory = !category || clean(t.Category) === category;
+  filteredTools = tools.filter(t => {
+    const rawText = Object.values(t).join(' ').toLowerCase();
+    const tightText = normalizeSearch(Object.values(t).join(' '));
 
-      return matchesSearch && matchesCategory;
-    });
+    const matchesSearch =
+      !searchRaw ||
+      rawText.includes(searchRaw) ||
+      tightText.includes(searchTight);
 
-    fillTools();
-    updateAll();
-  }
+    const matchesCategory =
+      !category || clean(t.Category) === category;
 
-  function fillTools(){
-    const sel = $('toolSelect');
-    sel.innerHTML = '<option value="">Select a tool or kit</option>';
+    return matchesSearch && matchesCategory;
+  });
 
-    filteredTools.forEach((t) => {
-      const originalIndex = tools.indexOf(t);
-      const opt = document.createElement('option');
-      opt.value = originalIndex;
-      opt.textContent = skuOf(t) + ' - ' + nameOf(t) + ' (' + money(priceOf(t)) + ')';
-      sel.appendChild(opt);
-    });
-  }
+  fillTools();
+  updateAll();
+}
 
   function fillBatteries(){
     ['batterySelect1','batterySelect2','batterySelect3'].forEach((id, index) => {
@@ -595,7 +587,9 @@
     });
 
     $('toolSearch').addEventListener('input', filterTools);
-    $('categoryFilter').addEventListener('change', filterTools);
+$('toolSearch').addEventListener('keyup', filterTools);
+$('toolSearch').addEventListener('search', filterTools);
+$('categoryFilter').addEventListener('change', filterTools);
     $('attachmentList').addEventListener('change', updateAll);
   }
 
