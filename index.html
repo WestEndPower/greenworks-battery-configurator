@@ -400,9 +400,18 @@
     return isNaN(x) ? 0 : x;
   };
 
-  const priceOf = (row) => num(row.SalePrice || row.Price || row.MSRP || row.saleprice || row.price || row.msrp);
-  const skuOf = (row) => clean(row.SKU || row.ToolSKU || row.BatterySKU || row.AttachmentSKU || row.Model || row.sku);
-  const nameOf = (row) => clean(row.Name || row.BatteryName || row.AttachmentName || row.Model || row.Description || row.name || skuOf(row));
+  const priceOf = (row) => {
+  if (!row) return 0;
+  return num(row.SalePrice || row.Price || row.MSRP || row.saleprice || row.price || row.msrp);
+};
+  const skuOf = (row) => {
+  if (!row) return '';
+  return clean(row.SKU || row.ToolSKU || row.BatterySKU || row.AttachmentSKU || row.Model || row.sku);
+};
+  const nameOf = (row) => {
+  if (!row) return '';
+  return clean(row.Name || row.BatteryName || row.AttachmentName || row.Model || row.Description || row.name || skuOf(row));
+};
 
   function showError(msg){
     const e = $('gw-data-error');
