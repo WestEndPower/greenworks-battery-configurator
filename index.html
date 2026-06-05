@@ -761,17 +761,23 @@ $('categoryFilter').addEventListener('change', filterTools);
       ? batteryLines.map(line => `${skuOf(line.battery)} x ${line.qty}`).join(', ')
       : 'None';
 
-    const compatibilitySummary = batteryLines.length
-      ? batteryLines.map(line => `${skuOf(line.battery)}: ${batteryCompatibleWithTool(tool, line.battery)}`).join('<br>')
-      : 'Select tool/battery';
+   const batteryDetailsSummary = batteryLines.length
+  ? batteryLines.map(line => {
+      const sku = skuOf(line.battery);
+      const compatible = batteryCompatibleWithTool(tool, line.battery);
+      const chargeTime = getChargeTime(line.battery, charger, line.qty);
+      const runtime = runtimeForBattery(tool, line.battery);
 
-    const chargeSummary = batteryLines.length
-      ? batteryLines.map(line => `${skuOf(line.battery)}: ${getChargeTime(line.battery, charger, line.qty)}`).join('<br>')
-      : 'Select battery';
-
-    const runtimeSummary = batteryLines.length
-      ? batteryLines.map(line => `${skuOf(line.battery)}: ${runtimeForBattery(tool, line.battery)}`).join('<br>')
-      : 'See product notes';
+      return `
+        <div style="margin-bottom:8px;">
+          <strong>${sku}</strong><br>
+          Compatible: ${compatible}<br>
+          Charge Time: ${chargeTime} minutes<br>
+          Runtime: ${runtime}
+        </div>
+      `;
+    }).join('')
+  : 'Select a battery';
 
     $('summaryLines').innerHTML = `
       <div class="gw-line"><span>Customer</span><strong>${clean($('customerName').value) || 'Not entered'}</strong></div>
@@ -779,10 +785,8 @@ $('categoryFilter').addEventListener('change', filterTools);
       <div class="gw-line"><span>Phone</span><strong>${clean($('customerPhone').value) || 'Not entered'}</strong></div>
       <div class="gw-line"><span>Selected Tool</span><strong>${tool ? skuOf(tool) : 'None'}</strong></div>
       <div class="gw-line"><span>Selected Batteries</span><strong>${batterySummary}</strong></div>
-      <div class="gw-line"><span>Battery Compatible</span><strong>${compatibilitySummary}</strong></div>
       <div class="gw-line"><span>Selected Charger</span><strong>${charger}</strong></div>
-      <div class="gw-line"><span>Estimated Charge Time</span><strong>${chargeSummary}</strong></div>
-      <div class="gw-line"><span>Estimated Runtime</span><strong>${runtimeSummary}</strong></div>
+      <div class="gw-line"><span>Battery Details</span><strong>${batteryDetailsSummary}</strong></div>
       <div class="gw-line"><span>Attachments</span><strong>${selectedAttachments.length ? selectedAttachments.map(a => skuOf(a)).join(', ') : 'None'}</strong></div>
     `;
   }
