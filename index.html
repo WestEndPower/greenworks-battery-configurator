@@ -529,7 +529,18 @@ function filterTools(){
   fillTools();
   updateAll();
 }
+function fillTools(){
+  const sel = $('toolSelect');
+  sel.innerHTML = '<option value="">Select a tool or kit</option>';
 
+  filteredTools.forEach((t) => {
+    const originalIndex = tools.indexOf(t);
+    const opt = document.createElement('option');
+    opt.value = originalIndex;
+    opt.textContent = skuOf(t) + ' - ' + nameOf(t) + ' (' + money(priceOf(t)) + ')';
+    sel.appendChild(opt);
+  });
+}
   function fillBatteries(){
     ['batterySelect1','batterySelect2','batterySelect3'].forEach((id, index) => {
       const sel = $(id);
