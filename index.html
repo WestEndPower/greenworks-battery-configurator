@@ -47,17 +47,20 @@ async function init(){try{[tools,batteries,attachments]=await Promise.all([loadC
 function fillCategoryFilter(){const sel=$('categoryFilter');sel.innerHTML='<option value="">All Categories</option>';const cats=[...new Set(tools.map(t=>clean(t.Category)).filter(Boolean))].sort();cats.forEach(cat=>{const opt=document.createElement('option');opt.value=cat;opt.textContent=cat;sel.appendChild(opt)})}
 function normalizeSearch(v){return clean(v).toLowerCase().replace(/[^a-z0-9]/g,'')}
 function filterTools(){
-  const search = clean($('toolSearch').value).toLowerCase();
+  const q = clean($('toolSearch').value).toLowerCase();
   const category = clean($('categoryFilter').value);
 
   filteredTools = tools.filter(t => {
-    const text = Object.values(t).join(' ').toLowerCase();
+    const searchable = Object.values(t)
+      .join(' ')
+      .toLowerCase();
 
     const matchesSearch =
-      !search || text.includes(search);
+      !q || searchable.includes(q);
 
     const matchesCategory =
-      !category || clean(t.Category) === category;
+      !category ||
+      clean(t.Category || t.category) === category;
 
     return matchesSearch && matchesCategory;
   });
@@ -69,22 +72,24 @@ function filterTools(){
     updateAll();
   }
 }
-function filterTools(){
-  const q = clean($('toolSearch').value).toLowerCase();
-  const category = clean($('categoryFilter').value);
 
-  filteredTools = tools.filter(t => {
-    const sku = clean(t.SKU || t.sku || t.Model || t.model).toLowerCase();
-    const name = clean(t.Name || t.name || t.Tool || t.tool).toLowerCase();
-    const type = clean(t.Type || t.type || t.Category || t.category || t.SubCategory || t.SubCateg).toLowerCase();
+Then check if you have a fillTools() function later in the file. It should look something like:
 
-    const matchesSearch = !q || sku.includes(q) || name.includes(q) || type.includes(q);
-    const matchesCategory = !category || clean(t.Category || t.category) === category;
+function fillTools(){
+  const sel = $('toolSelect');
 
-    return matchesSearch && matchesCategory;
+  sel.innerHTML = '<option value="">Select Tool</option>';
+
+  filteredTools.forEach(tool => {
+    const opt = document.createElement('option');
+
+    opt.value = tools.indexOf(tool);
+
+    opt.textContent =
+      `${skuOf(tool)} - ${nameOf(tool)}`;
+
+    sel.appendChild(opt);
   });
-
-  fillTools();
 }
 function fillBatteries(){['batterySelect1','batterySelect2','batterySelect3'].forEach((id,index)=>{const sel=$(id);sel.innerHTML=index===0?'<option value="">Select primary battery</option>':'<option value="">No additional battery</option>';batteries.forEach((b,i)=>{const opt=document.createElement('option');opt.value=i;opt.textContent=batteryOptionText(b);sel.appendChild(opt)})})}
 function batteryOptionText(battery){const tool=selectedTool();const runtime=runtimeForBattery(tool,battery);const price=priceOf(battery);let text=skuOf(battery)+' - '+nameOf(battery);if(tool){text+=' | Runtime: '+withMinutes(runtime)}if(price>0){text+=' | '+money(price)}return text}
