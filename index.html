@@ -51,17 +51,9 @@ function filterTools(){
   const category = clean($('categoryFilter').value);
 
   filteredTools = tools.filter(t => {
-    const searchable = Object.values(t)
-      .join(' ')
-      .toLowerCase();
-
-    const matchesSearch =
-      !q || searchable.includes(q);
-
-    const matchesCategory =
-      !category ||
-      clean(t.Category || t.category) === category;
-
+    const searchable = Object.values(t).join(' ').toLowerCase();
+    const matchesSearch = !q || searchable.includes(q);
+    const matchesCategory = !category || clean(t.Category || t.category) === category;
     return matchesSearch && matchesCategory;
   });
 
@@ -73,21 +65,14 @@ function filterTools(){
   }
 }
 
-Then check if you have a fillTools() function later in the file. It should look something like:
-
 function fillTools(){
   const sel = $('toolSelect');
-
   sel.innerHTML = '<option value="">Select Tool</option>';
 
   filteredTools.forEach(tool => {
     const opt = document.createElement('option');
-
     opt.value = tools.indexOf(tool);
-
-    opt.textContent =
-      `${skuOf(tool)} - ${nameOf(tool)}`;
-
+    opt.textContent = `${skuOf(tool)} - ${nameOf(tool)}`;
     sel.appendChild(opt);
   });
 }
