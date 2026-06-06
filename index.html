@@ -69,21 +69,22 @@ function filterTools(){
     updateAll();
   }
 }
-function fillTools(){
-  const sel=$('toolSelect');
-  sel.innerHTML='<option value="">Select a tool or kit</option>';
+function filterTools(){
+  const q = clean($('toolSearch').value).toLowerCase();
+  const category = clean($('categoryFilter').value);
 
-  filteredTools.forEach(t=>{
-    const originalIndex=tools.indexOf(t);
-    const opt=document.createElement('option');
-    opt.value=originalIndex;
-    opt.textContent=skuOf(t)+' - '+nameOf(t)+' ('+money(priceOf(t))+')';
-    sel.appendChild(opt);
+  filteredTools = tools.filter(t => {
+    const sku = clean(t.SKU || t.sku || t.Model || t.model).toLowerCase();
+    const name = clean(t.Name || t.name || t.Tool || t.tool).toLowerCase();
+    const type = clean(t.Type || t.type || t.Category || t.category || t.SubCategory || t.SubCateg).toLowerCase();
+
+    const matchesSearch = !q || sku.includes(q) || name.includes(q) || type.includes(q);
+    const matchesCategory = !category || clean(t.Category || t.category) === category;
+
+    return matchesSearch && matchesCategory;
   });
 
-  if(!filteredTools.length){
-    sel.innerHTML='<option value="">No matching tools found</option>';
-  }
+  fillTools();
 }
 function fillBatteries(){['batterySelect1','batterySelect2','batterySelect3'].forEach((id,index)=>{const sel=$(id);sel.innerHTML=index===0?'<option value="">Select primary battery</option>':'<option value="">No additional battery</option>';batteries.forEach((b,i)=>{const opt=document.createElement('option');opt.value=i;opt.textContent=batteryOptionText(b);sel.appendChild(opt)})})}
 function batteryOptionText(battery){const tool=selectedTool();const runtime=runtimeForBattery(tool,battery);const price=priceOf(battery);let text=skuOf(battery)+' - '+nameOf(battery);if(tool){text+=' | Runtime: '+withMinutes(runtime)}if(price>0){text+=' | '+money(price)}return text}
