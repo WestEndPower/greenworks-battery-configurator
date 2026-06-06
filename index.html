@@ -69,6 +69,22 @@ function filterTools(){
     updateAll();
   }
 }
+function fillTools(){
+  const sel=$('toolSelect');
+  sel.innerHTML='<option value="">Select a tool or kit</option>';
+
+  filteredTools.forEach(t=>{
+    const originalIndex=tools.indexOf(t);
+    const opt=document.createElement('option');
+    opt.value=originalIndex;
+    opt.textContent=skuOf(t)+' - '+nameOf(t)+' ('+money(priceOf(t))+')';
+    sel.appendChild(opt);
+  });
+
+  if(!filteredTools.length){
+    sel.innerHTML='<option value="">No matching tools found</option>';
+  }
+}
 function fillBatteries(){['batterySelect1','batterySelect2','batterySelect3'].forEach((id,index)=>{const sel=$(id);sel.innerHTML=index===0?'<option value="">Select primary battery</option>':'<option value="">No additional battery</option>';batteries.forEach((b,i)=>{const opt=document.createElement('option');opt.value=i;opt.textContent=batteryOptionText(b);sel.appendChild(opt)})})}
 function batteryOptionText(battery){const tool=selectedTool();const runtime=runtimeForBattery(tool,battery);const price=priceOf(battery);let text=skuOf(battery)+' - '+nameOf(battery);if(tool){text+=' | Runtime: '+withMinutes(runtime)}if(price>0){text+=' | '+money(price)}return text}
 function updateBatteryDropdownRuntime(){['batterySelect1','batterySelect2','batterySelect3'].forEach(id=>{const sel=$(id);Array.from(sel.options).forEach(opt=>{if(opt.value==='')return;const battery=batteries[Number(opt.value)];if(battery){opt.textContent=batteryOptionText(battery)}})})}
