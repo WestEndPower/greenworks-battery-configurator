@@ -768,14 +768,12 @@ $('categoryFilter').addEventListener('change', filterTools);
       const chargeTime = getChargeTime(line.battery, charger, line.qty);
       const runtime = runtimeForBattery(tool, line.battery);
 
-      return `
-        <div style="margin-bottom:8px;">
-          <strong>${sku}</strong><br>
-          Compatible: ${compatible}<br>
-          Charge Time: ${chargeTime} minutes<br>
-          Runtime: ${runtime}
-        </div>
-      `;
+     return `
+  <div style="margin-bottom:6px;">
+    <strong>${sku}</strong> —
+    ${runtime} min runtime | ${chargeTime} min charge | Compatible
+  </div>
+`;
     }).join('')
   : 'Select a battery';
 
