@@ -393,10 +393,10 @@
     'Runtime N/A';
 
   return optionHTML(
-    sku,
-    b ? `${b.BatteryName} — ${runtime}` : sku,
-    sku===clean(t.RecommendedBattery)
-  );
+  sku,
+  b ? `${b.BatteryName} (${runtime}) — ${money(priceOf(b))}` : sku,
+  sku===clean(t.RecommendedBattery)
+);
 });
     $('batterySelect').innerHTML = optionHTML('','Choose battery') + opts.join('');
     $('batteryQty').value = Math.max(1, parseInt(clean(t.RecommendedBatteryCount)||'1',10) || 1);
