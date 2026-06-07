@@ -369,8 +369,24 @@
     state.selectedTool = findTool(sku) || null;
     if($('toolQty')) $('toolQty').value = 1;
     renderToolDetails();
-    renderBatteryOptions();
-    renderAttachmentOptions();
+
+if(clean(state.selectedTool?.ComponentType).toLowerCase() === 'kit'){
+  $('batterySelect').innerHTML = optionHTML('','Included in kit');
+  $('chargerSelect').innerHTML = optionHTML('','Included in kit');
+
+  $('batteryQty').value =
+    clean(state.selectedTool.IncludedBatteryQty) ||
+    clean(state.selectedTool.RecommendedBatteryCount) ||
+    1;
+
+  $('chargerQty').value =
+    clean(state.selectedTool.IncludedChargerQty) ||
+    1;
+} else {
+  renderBatteryOptions();
+}
+
+renderAttachmentOptions();
     renderAccessoryOptions();
     updateAllDetails();
   }
