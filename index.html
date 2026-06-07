@@ -335,7 +335,7 @@
       if(q && !toolSearchText(t).includes(q)) return false;
       return true;
     });
-    $('toolSelect').innerHTML = optionHTML('','Select tool or kit') + tools.map(t=>optionHTML(skuOf(t), `${clean(t.Name)} — ${skuOf(t)} — ${priceOf(t) ? money(priceOf(t)) : 'Price not listed'}`)).join('');
+    $('toolSelect').innerHTML = optionHTML('','Select tool or kit') + tools.map(t=>optionHTML(skuOf(t), clean(t.Name))).join('');
     if(state.selectedTool && tools.some(t=>skuOf(t)===skuOf(state.selectedTool))) $('toolSelect').value = skuOf(state.selectedTool);
   }
 
