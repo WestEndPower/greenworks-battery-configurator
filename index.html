@@ -396,6 +396,7 @@
 
  function renderBatteryOptions(){
   const t = state.selectedTool;
+
   if(!t){
     $('batterySelect').innerHTML = optionHTML('','Select tool first');
     $('chargerSelect').innerHTML = optionHTML('','Select battery first');
@@ -404,7 +405,37 @@
 
   const skus = compatibleBatterySkus(t);
 
-  function renderBatteryOptions(){
+  const opts = skus.map(sku => {
+    const b = findBattery(sku);
+
+    const low = clean(t[`${sku}RunTimeLow`] || t[`RuntimeLow_${sku}`]);
+    const high = clean(t[`${sku}RunTimeHigh`] || t[`RuntimeHigh_${sku}`]);
+
+    const runtime =
+      low && high ? `${low}-${high} min` :
+      low ? `${low} min` :
+      high ? `${high} min` :
+      'N/A';
+
+    return optionHTML(
+      sku,
+      `${sku} — Est. Run Time ${runtime} — ${money(priceOf(b))}`,
+      sku === clean(t.RecommendedBattery)
+    );
+  });
+
+  $('batterySelect').innerHTML =
+    optionHTML('','Choose battery') + opts.join('');
+
+  $('batteryQty').value =
+    Math.max(1, parseInt(clean(t.RecommendedBatteryCount)||'1',10) || 1);
+
+  if(clean(t.RecommendedBattery) && skus.includes(clean(t.RecommendedBattery))){
+    $('batterySelect').value = clean(t.RecommendedBattery);
+  }
+
+  renderChargerOptions();
+}
   const t = state.selectedTool;
 
   if(!t){
