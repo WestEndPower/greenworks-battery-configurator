@@ -399,10 +399,10 @@
       'Runtime N/A';
 
     return optionHTML(
-      sku,
-      b ? `${b.BatteryName} — ${runtime} — ${money(priceOf(b))}` : `${sku} — ${runtime}`,
-      sku === clean(t.RecommendedBattery)
-    );
+  sku,
+  `${b.BatteryName} — Est. Run Time ${runtime} — ${money(priceOf(b))}`,
+  sku === clean(t.RecommendedBattery)
+);
   });
 
   $('batterySelect').innerHTML =
