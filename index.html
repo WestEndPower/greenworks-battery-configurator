@@ -181,10 +181,19 @@
       <section class="gw-card" id="gw-attachments-section">
         <h2>Attachments</h2>
         <p class="gw-muted">Compatible attachments appear when the selected tool matches the attachment's CompatibleTools field.</p>
-        <div class="gw-row">
-          <div><label class="gw-label" for="attachmentSelect">Attachment</label><select id="attachmentSelect" class="gw-select"><option value="">Select tool first</option></select></div>
-          <div><label class="gw-label" for="attachmentQty">Quantity</label><input id="attachmentQty" class="gw-input" type="number" min="1" step="1" value="1"></div>
-        </div>
+<div style="display:flex;gap:8px;align-items:end;">
+  <div style="flex:1">
+    <label class="gw-label" for="attachmentSelect">Attachment</label>
+    <select id="attachmentSelect" class="gw-select">
+      <option value="">Select tool first</option>
+    </select>
+  </div>
+
+  <div style="width:50px">
+    <label class="gw-label" for="attachmentQty">Qty</label>
+    <input id="attachmentQty" class="gw-input" type="number" min="1" step="1" value="1">
+  </div>
+</div>
         <div id="attachmentDetails" style="margin-top:12px;"></div>
         <div class="gw-actions"><button class="gw-btn" id="addAttachmentBtn" type="button">Add Attachment</button></div>
       </section>
@@ -197,10 +206,19 @@
       <section class="gw-card" id="gw-accessories-section">
         <h2>Accessories</h2>
         <p class="gw-muted">Add one accessory, then use the button again to add additional accessories.</p>
-        <div class="gw-row">
-          <div><label class="gw-label" for="accessorySelect">Accessory</label><select id="accessorySelect" class="gw-select"><option value="">Select tool first</option></select></div>
-          <div><label class="gw-label" for="accessoryQty">Quantity</label><input id="accessoryQty" class="gw-input" type="number" min="1" step="1" value="1"></div>
-        </div>
+        <div style="display:flex;gap:8px;align-items:end;">
+  <div style="flex:1">
+    <label class="gw-label" for="accessorySelect">Accessory</label>
+    <select id="accessorySelect" class="gw-select">
+      <option value="">Select tool first</option>
+    </select>
+  </div>
+
+  <div style="width:50px">
+    <label class="gw-label" for="accessoryQty">Qty</label>
+    <input id="accessoryQty" class="gw-input" type="number" min="1" step="1" value="1">
+  </div>
+</div>
         <div id="accessoryDetails" style="margin-top:12px;"></div>
         <div class="gw-actions"><button class="gw-btn" id="addAccessoryBtn" type="button">Add Accessory</button></div>
       </section>
