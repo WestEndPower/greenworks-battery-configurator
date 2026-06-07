@@ -419,6 +419,10 @@
     $('batterySelect').value = clean(t.RecommendedBattery);
   }
 
+renderChargerOptions();
+
+}
+
   function renderChargerOptions(){
     const t = state.selectedTool;
     const chargerRefs=[];
@@ -446,7 +450,7 @@ const chargerDescription =
   c.sku;
 
 const label = charger
-  ? `${chargerDescription} — ${chargeTime || 'Charge Time N/A'} — ${money(priceOf(charger))}`
+  ? `${chargerDescription} — ${chargeTime || 'Charge Time N/A'}`
   : `${c.sku}`;
       return optionHTML(c.sku, label);
     });
