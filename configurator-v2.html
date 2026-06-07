@@ -335,7 +335,7 @@
       if(q && !toolSearchText(t).includes(q)) return false;
       return true;
     });
-    $('toolSelect').innerHTML = optionHTML('','Choose a tool or kit') + tools.map(t=>optionHTML(skuOf(t), `${clean(t.Name)} — ${skuOf(t)} — ${priceOf(t) ? money(priceOf(t)) : 'Price not listed'}`)).join('');
+    $('toolSelect').innerHTML = optionHTML('','Select tool or kit') + tools.map(t=>optionHTML(skuOf(t), `${clean(t.Name)} — ${skuOf(t)} — ${priceOf(t) ? money(priceOf(t)) : 'Price not listed'}`)).join('');
     if(state.selectedTool && tools.some(t=>skuOf(t)===skuOf(state.selectedTool))) $('toolSelect').value = skuOf(state.selectedTool);
   }
 
@@ -590,7 +590,10 @@
       $('dataStatus').innerHTML = `Loaded ${state.tools.length} tools/kits, ${state.batteries.length} batteries, ${state.chargers.length} chargers, ${state.attachments.length} attachments, and ${state.accessories.length} accessories.`;
       populateCategoryFilter(); filterTools(); bindEvents(); renderSummary();
       const first = sortByOrder(state.tools).find(t=>clean(t.Active).toUpperCase()!=='FALSE');
-      if(first){ $('toolSelect').value=skuOf(first); selectTool(skuOf(first)); }
+      $('toolSelect').value = '';
+
+$('toolDetails').innerHTML =
+  'Choose a Tool or Kit to view compatible batteries, chargers, attachments, accessories, runtime, and charge times.';
     }catch(err){
       $('dataStatus').className='gw-alert';
       $('dataStatus').innerHTML = `<b>Data file problem:</b> ${escapeHTML(err.message)}. Confirm your GitHub repo has /data/tools.csv, /data/batteries.csv, /data/chargers.csv, /data/attachments.csv, and /data/accessories.csv with exact spelling.`;
