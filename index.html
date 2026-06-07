@@ -398,12 +398,11 @@
       high ? `${high} min` :
       'N/A';
 
-    return optionHTML(
+   return optionHTML(
   sku,
-  `${b.BatteryName} — Est. Run Time ${runtime} — ${money(priceOf(b))}`,
+  `${sku} — Est. Run Time ${runtime} — ${money(priceOf(b))}`,
   sku === clean(t.RecommendedBattery)
 );
-  });
 
   $('batterySelect').innerHTML =
     optionHTML('','Choose battery') + opts.join('');
