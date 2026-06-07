@@ -376,10 +376,11 @@
     `;
   }
 
-  function renderBatteryOptions(){
+ function renderBatteryOptions(){
   const t = state.selectedTool;
   if(!t){
     $('batterySelect').innerHTML = optionHTML('','Select tool first');
+    $('chargerSelect').innerHTML = optionHTML('','Select battery first');
     return;
   }
 
@@ -388,13 +389,8 @@
   const opts = skus.map(sku => {
     const b = findBattery(sku);
 
-    const low = clean(
-      t[`${sku}RunTimeLow`] || t[`RuntimeLow_${sku}`]
-    );
-
-    const high = clean(
-      t[`${sku}RunTimeHigh`] || t[`RuntimeHigh_${sku}`]
-    );
+    const low = clean(t[`${sku}RunTimeLow`] || t[`RuntimeLow_${sku}`]);
+    const high = clean(t[`${sku}RunTimeHigh`] || t[`RuntimeHigh_${sku}`]);
 
     const runtime =
       low && high ? `${low}-${high} min` :
@@ -419,44 +415,71 @@
     $('batterySelect').value = clean(t.RecommendedBattery);
   }
 
-renderChargerOptions();
-
+  renderChargerOptions();
 }
 
-  function renderChargerOptions(){
-    const t = state.selectedTool;
-    const chargerRefs=[];
-    if(t){
-      if(clean(t.StandardCharger) && isTrue(t[clean(t.StandardCharger)])) chargerRefs.push({sku:clean(t.StandardCharger),label:'Standard Charger'});
-      if(clean(t.FastCharger) && isTrue(t[clean(t.FastCharger)])) chargerRefs.push({sku:clean(t.FastCharger),label:'Fast Charger'});
-      if(clean(t.MultiCharger) && isTrue(t[clean(t.MultiCharger)])) chargerRefs.push({sku:clean(t.MultiCharger),label:'Multi Charger'});
-    }
-    const seen = new Set();
-    const opts = chargerRefs.filter(c=>{if(seen.has(c.sku))return false; seen.add(c.sku); return true;}).map(c=>{
+function renderChargerOptions(){
+  const t = state.selectedTool;
+  const battery = findBattery(clean($('batterySelect').value));
+
+  if(!t){
+    $('chargerSelect').innerHTML = optionHTML('','Select tool first');
+    return;
+  }
+
+  const chargerRefs = [];
+
+  if(clean(t.StandardCharger) && isTrue(t[clean(t.StandardCharger)])){
+    chargerRefs.push({sku:clean(t.StandardCharger),label:'Standard Charger'});
+  }
+
+  if(clean(t.FastCharger) && isTrue(t[clean(t.FastCharger)])){
+    chargerRefs.push({sku:clean(t.FastCharger),label:'Fast Charger'});
+  }
+
+  if(clean(t.MultiCharger) && isTrue(t[clean(t.MultiCharger)])){
+    chargerRefs.push({sku:clean(t.MultiCharger),label:'Multi Charger'});
+  }
+
+  const seen = new Set();
+
+  const opts = chargerRefs
+    .filter(c => {
+      if(seen.has(c.sku)) return false;
+      seen.add(c.sku);
+      return true;
+    })
+    .map(c => {
       const charger = findCharger(c.sku);
-      const battery = findBattery(clean($('batterySelect').value));
-const chargeTime = battery
-  ? chargeTimeFor(
-      battery,
-      c.sku,
-      parseInt($('batteryQty').value,10) || 1
-    )
-  : '';
 
-const chargerDescription =
-  clean(charger.Description) ||
-  clean(charger.ChargerName) ||
-  clean(charger.Name) ||
-  c.sku;
+      const chargeTime = battery
+        ? chargeTimeFor(
+            battery,
+            c.sku,
+            parseInt($('batteryQty').value,10) || 1
+          )
+        : '';
 
-const label = charger
-  ? `${chargerDescription} — ${chargeTime || 'Charge Time N/A'}`
-  : `${c.sku}`;
+      const chargerDescription =
+        charger
+          ? clean(charger.Description) ||
+            clean(charger.ChargerName) ||
+            clean(charger.Name) ||
+            c.sku
+          : c.sku;
+
+      const label = `${chargerDescription} — ${chargeTime || 'Charge Time N/A'}`;
+
       return optionHTML(c.sku, label);
     });
-    $('chargerSelect').innerHTML = optionHTML('','No charger') + opts.join('');
-    if(chargerRefs[0]) $('chargerSelect').value = chargerRefs[0].sku;
+
+  $('chargerSelect').innerHTML =
+    optionHTML('','Choose charger') + opts.join('');
+
+  if(chargerRefs[0]){
+    $('chargerSelect').value = chargerRefs[0].sku;
   }
+}
 
   function runtimeFor(item,batterySku){
     if(!item || !batterySku) return '';
