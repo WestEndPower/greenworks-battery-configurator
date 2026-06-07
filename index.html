@@ -468,7 +468,7 @@ function renderChargerOptions(){
           : c.sku;
 
       const label =
-  `${chargerDescription} — Est. Charge Time ${chargeTime || 'N/A'} — ${money(priceOf(charger))}`;
+  `${c.sku} — Est. Charge Time ${chargeTime || 'N/A'} — ${money(priceOf(charger))}`;
 
       return optionHTML(c.sku, label);
     });
