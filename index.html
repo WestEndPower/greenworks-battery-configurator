@@ -415,7 +415,24 @@
     const seen = new Set();
     const opts = chargerRefs.filter(c=>{if(seen.has(c.sku))return false; seen.add(c.sku); return true;}).map(c=>{
       const charger = findCharger(c.sku);
-      const label = charger ? `${c.label} — ${charger.ChargerName} — ${money(priceOf(charger))}` : `${c.label} — ${c.sku}`;
+      const battery = findBattery(clean($('batterySelect').value));
+const chargeTime = battery
+  ? chargeTimeFor(
+      battery,
+      c.sku,
+      parseInt($('batteryQty').value,10) || 1
+    )
+  : '';
+
+const chargerDescription =
+  clean(charger.Description) ||
+  clean(charger.ChargerName) ||
+  clean(charger.Name) ||
+  c.sku;
+
+const label = charger
+  ? `${chargerDescription} — ${chargeTime || 'Charge Time N/A'} — ${money(priceOf(charger))}`
+  : `${c.sku}`;
       return optionHTML(c.sku, label);
     });
     $('chargerSelect').innerHTML = optionHTML('','No charger') + opts.join('');
