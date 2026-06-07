@@ -598,7 +598,18 @@ const label = charger
   function bindEvents(){
     ['toolSearch','categoryFilter','componentFilter'].forEach(id=>$(id).addEventListener('input',filterTools));
     $('toolSelect').addEventListener('change',e=>selectTool(e.target.value));
-    ['batterySelect','batteryQty','chargerSelect','electricRate','chargerEfficiency','chargesPerMonth'].forEach(id=>$(id).addEventListener('input',updateAllDetails));
+    ['batterySelect','batteryQty'].forEach(id =>
+  $(id).addEventListener('input', () => {
+    renderChargerOptions();
+    updateAllDetails();
+  })
+);
+
+['chargerSelect','electricRate',
+ 'chargerEfficiency','chargesPerMonth']
+.forEach(id =>
+  $(id).addEventListener('input', updateAllDetails)
+);
     $('attachmentSelect').addEventListener('change',renderAttachmentDetails);
     $('accessorySelect').addEventListener('change',renderAccessoryDetails);
     $('attachmentQty').addEventListener('input',renderAttachmentDetails);
