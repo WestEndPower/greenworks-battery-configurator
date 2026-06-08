@@ -371,17 +371,24 @@
     renderToolDetails();
 
 if(clean(state.selectedTool?.ComponentType).toLowerCase() === 'kit'){
-  $('batterySelect').innerHTML = optionHTML('','Included in kit');
-  $('chargerSelect').innerHTML = optionHTML('','Included in kit');
+  renderBatteryOptions();
+  renderChargerOptions();
 
-  $('batteryQty').value =
-    clean(state.selectedTool.IncludedBatteryQty) ||
-    clean(state.selectedTool.RecommendedBatteryCount) ||
-    1;
+  $('batterySelect').insertAdjacentHTML(
+    'afterbegin',
+    optionHTML('', 'Included in kit - select extra battery below')
+  );
 
-  $('chargerQty').value =
-    clean(state.selectedTool.IncludedChargerQty) ||
-    1;
+  $('chargerSelect').insertAdjacentHTML(
+    'afterbegin',
+    optionHTML('', 'Included in kit - select extra charger below')
+  );
+
+  $('batterySelect').value = '';
+  $('chargerSelect').value = '';
+
+  $('batteryQty').value = 1;
+  $('chargerQty').value = 1;
 } else {
   renderBatteryOptions();
 }
