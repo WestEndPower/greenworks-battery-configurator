@@ -404,7 +404,19 @@ renderAttachmentOptions();
     const t = state.selectedTool;
     if(!t){ $('toolDetails').innerHTML = 'Select a tool to view compatible batteries, chargers, attachments, accessories, runtime, and charge times.'; return; }
     const required = clean(t.RecommendedBatteryCount) || '1';
-    const included = [t.IncludedBattery && `Battery: ${clean(t.IncludedBattery)}`, t.IncludedCharger && `Charger: ${clean(t.IncludedCharger)}`].filter(Boolean).join(' • ');
+
+const kitBattery =
+  clean(t.IncludedBattery) ||
+  clean(t.RecommendedBattery);
+
+const kitRuntime = kitBattery
+  ? runtimeFor(t, kitBattery)
+  : '';
+
+const included = [
+  t.IncludedBattery && `Battery: ${clean(t.IncludedBattery)}`,
+  t.IncludedCharger && `Charger: ${clean(t.IncludedCharger)}`
+].filter(Boolean).join(' • ');
     $('toolDetails').innerHTML = `
       <div class="gw-item-head"><div><h3>${escapeHTML(t.Name)}</h3><div class="gw-muted">${escapeHTML(t.Category)} / ${escapeHTML(t.SubCategory)} • ${escapeHTML(t.ComponentType)}</div></div><div>${renderBadges(t)}</div></div>
       <div class="gw-specs">
@@ -412,6 +424,7 @@ renderAttachmentOptions();
         <div class="gw-spec"><b>Tool / Kit Price</b><span>${priceOf(t) ? money(priceOf(t)) : 'Price not listed'}</span></div>
         <div class="gw-spec"><b>Battery Qty Required</b><span>${escapeHTML(required)}</span></div>
         <div class="gw-spec"><b>Recommended Battery</b><span>${escapeHTML(t.RecommendedBattery || 'Not listed')}</span></div>
+<div class="gw-spec"><b>Kit Battery Runtime</b><span>${escapeHTML(kitRuntime || 'N/A')}</span></div>
         <div class="gw-spec"><b>Package</b><span>${escapeHTML(t.DefaultPackage || 'Custom')}</span></div>
       </div>
       ${included ? `<p class="gw-muted"><b>Included with kit:</b> ${escapeHTML(included)}</p>` : ''}
