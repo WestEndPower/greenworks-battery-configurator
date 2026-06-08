@@ -377,20 +377,14 @@ if(clean(state.selectedTool?.ComponentType).toLowerCase() === 'kit'){
   renderChargerOptions();
 
   $('batterySelect').insertAdjacentHTML(
-    'afterbegin',
-    optionHTML(
-      '',
-      `Included in Kit: ${clean(state.selectedTool.IncludedBattery || state.selectedTool.RecommendedBattery || 'Battery')}`
-    )
-  );
+  'afterbegin',
+  optionHTML('', 'Choose Additional Battery(s)')
+);
 
-  $('chargerSelect').insertAdjacentHTML(
-    'afterbegin',
-    optionHTML(
-      '',
-      `Included in Kit: ${clean(state.selectedTool.IncludedCharger || state.selectedTool.StandardCharger || 'Charger')}`
-    )
-  );
+$('chargerSelect').insertAdjacentHTML(
+  'afterbegin',
+  optionHTML('', 'Choose Additional Charger(s)')
+);
 
   $('batterySelect').value = '';
   $('chargerSelect').value = '';
